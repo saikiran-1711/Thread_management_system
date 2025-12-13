@@ -1,16 +1,16 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -pthread -Iinclude
 
-EXAMPLE = examples/example_threadpool
-TEST = test/test_threadpool
+EXAMPLE_BIN = examples/example_threadpool
+TEST_BIN = test/test_threadpool
 
 all: example test
 
 example:
-	gcc $(CFLAGS) examples/example_threadpool.c src/threadpool.c -o $(EXAMPLE)
+	$(CC) $(CFLAGS) examples/example_threadpool.c src/threadpool.c -o $(EXAMPLE_BIN)
 
 test:
-	gcc $(CFLAGS) test/test_threadpool.c src/threadpool.c -o $(TEST)
+	$(CC) $(CFLAGS) test/test_threadpool.c src/threadpool.c -o $(TEST_BIN)
 
 clean:
-	rm -f $(EXAMPLE) $(TEST)
+	rm -f $(EXAMPLE_BIN) $(TEST_BIN)
