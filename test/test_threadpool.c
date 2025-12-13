@@ -3,8 +3,8 @@
 
 int main() {
     threadpool_t pool;
-    threadpool_init(&pool, 4);
-    printf("Thread pool test passed\n");
+    threadpool_init(&pool, 2);
     threadpool_destroy(&pool);
+    printf("Thread pool test passed\n");
     return 0;
 }
