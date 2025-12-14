@@ -1,11 +1,29 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <pthread.h>
+#include "../include/threadpool.h"
+
+/* Mutex only for clean printing */
+pthread_mutex_t print_lock = PTHREAD_MUTEX_INITIALIZER;
+
+/* Task function */
+void demo_task(void *arg) {
+    int id = *(int *)arg;
+
+    pthread_mutex_lock(&print_lock);
+    printf("Task %d executed successfully by a thread\n", id);
+    fflush(stdout);
+    pthread_mutex_unlock(&print_lock);
+
+    usleep(100000); // simulate work
+}
+
 int main() {
     const int TASK_COUNT = 100;
 
     printf("Running %d tasks using thread pool\n", TASK_COUNT);
 
     threadpool_t pool;
-
-    /* Create thread pool with fixed number of worker threads */
     threadpool_init(&pool, 8);
 
     int task_ids[TASK_COUNT];
@@ -15,7 +33,6 @@ int main() {
         threadpool_submit(&pool, demo_task, &task_ids[i]);
     }
 
-    /* Give enough time for all tasks to finish */
     sleep(3);
 
     threadpool_destroy(&pool);
@@ -23,5 +40,3 @@ int main() {
     printf("All %d tasks executed successfully.\n", TASK_COUNT);
     return 0;
 }
-
-
