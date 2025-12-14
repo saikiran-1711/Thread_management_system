@@ -3,32 +3,25 @@
 
 #include <pthread.h>
 
-/* Task structure */
+/* Task node */
 typedef struct task {
     void (*function)(void *);
     void *argument;
     struct task *next;
 } task_t;
 
-/* Thread state (for monitoring & explanation) */
-typedef enum {
-    THREAD_IDLE,
-    THREAD_BUSY
-} thread_state_t;
-
 /* Thread pool structure */
 typedef struct threadpool {
     pthread_t *threads;
-    thread_state_t *states;
-
     int thread_count;
-    int shutdown;
 
     task_t *task_head;
     task_t *task_tail;
 
     pthread_mutex_t lock;
     pthread_cond_t task_available;
+
+    int shutdown;
 } threadpool_t;
 
 /* Public API */
