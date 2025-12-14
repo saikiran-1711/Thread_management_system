@@ -1,53 +1,25 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <pthread.h>
-#include "../include/threadpool.h"
-
-/* Mutex only for clean printing */
-pthread_mutex_t print_lock = PTHREAD_MUTEX_INITIALIZER;
-
-/* Task function executed by threads */
-void demo_task(void *arg) {
-    int task_id = *(int *)arg;
-
-    pthread_mutex_lock(&print_lock);
-    printf("Task %d executed successfully by a thread\n", task_id);
-    fflush(stdout);
-    pthread_mutex_unlock(&print_lock);
-
-    usleep(100000); // simulate work (0.1s)
-}
-
 int main() {
-    int task_count;
+    const int TASK_COUNT = 100;
 
-    printf("Enter number of tasks to run: ");
-    scanf("%d", &task_count);
-
-    if (task_count <= 0) {
-        printf("Invalid number of tasks.\n");
-        return 1;
-    }
+    printf("Running %d tasks using thread pool\n", TASK_COUNT);
 
     threadpool_t pool;
 
-    /* Create thread pool with fixed threads (e.g., 8) */
+    /* Create thread pool with fixed number of worker threads */
     threadpool_init(&pool, 8);
 
-    int *task_ids = malloc(sizeof(int) * task_count);
+    int task_ids[TASK_COUNT];
 
-    for (int i = 0; i < task_count; i++) {
+    for (int i = 0; i < TASK_COUNT; i++) {
         task_ids[i] = i + 1;
         threadpool_submit(&pool, demo_task, &task_ids[i]);
     }
 
-    /* Give threads time to finish */
-    sleep(2);
+    /* Give enough time for all tasks to finish */
+    sleep(3);
 
     threadpool_destroy(&pool);
-    free(task_ids);
 
-    printf("All tasks completed.\n");
+    printf("All %d tasks executed successfully.\n", TASK_COUNT);
     return 0;
 }
