@@ -3,12 +3,23 @@
 
 #include <pthread.h>
 
-/* Opaque task structure (internal use) */
-typedef struct task task_t;
+/* Task structure */
+typedef struct task {
+    void (*function)(void *);
+    void *argument;
+    struct task *next;
+} task_t;
+
+/* Thread state (for monitoring & explanation) */
+typedef enum {
+    THREAD_IDLE,
+    THREAD_BUSY
+} thread_state_t;
 
 /* Thread pool structure */
 typedef struct threadpool {
     pthread_t *threads;
+    thread_state_t *states;
 
     int thread_count;
     int shutdown;
@@ -28,3 +39,4 @@ void threadpool_submit(threadpool_t *pool,
 void threadpool_destroy(threadpool_t *pool);
 
 #endif
+
