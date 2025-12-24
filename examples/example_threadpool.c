@@ -19,7 +19,7 @@ printf("Task %d executed by thread ID %lu\n", id, pthread_self());
 }
 
 int main() {
-    const int TASK_COUNT = 100;
+    const int TASK_COUNT = 10;
 
     printf("Running %d tasks using thread pool\n", TASK_COUNT);
 
