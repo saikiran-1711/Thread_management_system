@@ -11,7 +11,7 @@ void demo_task(void *arg) {
     int id = *(int *)arg;
 
     pthread_mutex_lock(&print_lock);
-    printf("Task %d executed successfully by a thread\n", id);
+printf("Task %d executed by thread ID %lu\n", id, pthread_self());
     fflush(stdout);
     pthread_mutex_unlock(&print_lock);
 
